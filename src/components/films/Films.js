@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {deleteFilm, getFilms} from '../../store/actions/filmAction';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faThumbsUp, faThumbsDown, faTrash} from "@fortawesome/free-solid-svg-icons";
+import Pagination from '../Pagination';
 
 const Films = (props) => {
     let {getFilms, films} = props;
@@ -60,8 +61,6 @@ const Films = (props) => {
         films[disLikes.index] = film
     }
 
-
-
     // Filters
 
     if (searchCat){
@@ -72,11 +71,34 @@ const Films = (props) => {
         films = films
     }
 
+    // Pagination
+
+    const indexOfLastFilm = activePage * perPage;
+    const indexOfFirstFilm = indexOfLastFilm - perPage;
+    const currentFilms = films.slice(indexOfFirstFilm, indexOfLastFilm)
+
+    // Change page
+    const paginate = (e, pageNumber) => setActivePage(pageNumber);
+
+    films = currentFilms
+
     return (
         <div className="container">
             <h2 className="title is-link">Liste des films ({films.length})</h2>
             <div className="level">
                 <div className="level-left">
+                    <div className="level-item">
+                        <div className="field">
+                            <label className="label">Pagination par</label>
+                            <div className="select is-fullwidth">
+                                <select onChange={filterByCat} onChange={(e)=>setPerPage(e.target.value)}>
+                                    <option value="4">4</option>
+                                    <option value="8">8</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div className="level-item">
                         <div className="field">
                             <label className="label">Filtre par catégorie</label>
@@ -159,19 +181,7 @@ const Films = (props) => {
                        Aucun film n'est disponible
                    </div>
             }
-            <nav className="pagination is-centered" role="navigation" aria-label="pagination">
-                <a className="pagination-previous">Précédent</a>
-                <a className="pagination-next">Suivant</a>
-                <ul className="pagination-list">
-                    <li><a className="pagination-link" aria-label="Goto page 1">1</a></li>
-                    <li><span className="pagination-ellipsis">&hellip;</span></li>
-                    <li><a className="pagination-link" aria-label="Goto page 45">5</a></li>
-                    <li><a className="pagination-link is-current" aria-label="Page 46" aria-current="page">6</a></li>
-                    <li><a className="pagination-link" aria-label="Goto page 7">9</a></li>
-                    <li><span className="pagination-ellipsis">&hellip;</span></li>
-                    <li><a className="pagination-link" aria-label="Goto page 86">9</a></li>
-                </ul>
-            </nav>
+            <Pagination filmsPerPage={perPage} totalFilms={props.films.length} paginate={paginate} />
         </div>
     )
 }
