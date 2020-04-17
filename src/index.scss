@@ -1,0 +1,13 @@
+@import 'bulma';
+
+.cardfilm {
+    //display: inline-block;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.thecard {
+    flex: 0 1 24%;
+    box-sizing: border-box;
+    margin: 1rem .25em;
+}
